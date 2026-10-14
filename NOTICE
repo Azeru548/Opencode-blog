@@ -1,0 +1,44 @@
+# NOTICE — attribution chain (required by the upstream licenses)
+
+This project (`prose-rigor`) is an OpenCode port of writing-quality methodology
+from the following works. Their license terms are preserved below alongside the
+MIT license in `LICENSE` that covers this port's original expression.
+
+## 1. claude-blog (MIT)
+
+Source: https://github.com/AgriciDaniel/claude-blog
+Copyright: Daniel Agrici and contributors. MIT License; see the upstream
+`LICENSE` for the full text.
+
+Ported material: the methodology of `skills/blog/references/editorial-heuristics.md`,
+`skills/blog/references/cognitive-load.md`, `skills/blog/references/ai-slop-detection.md`,
+`skills/blog/references/synthesis-contract.md` and the structure of
+`skills/blog/references/quality-scoring.md` (rebalanced here as
+`references/prose-scoring.md`). No upstream code, scripts, agents, installers or
+branding are included.
+
+## 2. impeccable plugin (Apache License 2.0)
+
+Source: https://github.com/pbakaus/impeccable
+Copyright: Paul Bakaus. Licensed under the Apache License, Version 2.0
+(http://www.apache.org/licenses/LICENSE-2.0).
+
+Used via claude-blog: the Nielsen-adapted 0–4 ordinal editorial rubric, the
+three-load cognitive model applied to editorial ergonomics (Sweller; Cowan 2001),
+and the two-tier first-order / second-order reflex methodology. Per Apache 2.0
+§4, this port notes that the material has been changed (de-blogged, re-grounded
+for non-blog prose) and retains all upstream copyright, patent, trademark and
+attribution notices in this file.
+
+## 3. last30days-skill (MIT)
+
+Source: https://github.com/mvanhorn/last30days-skill
+Copyright: Matt Van Horn. MIT License.
+
+Used via claude-blog: 6 of 8 VOICE CONTRACT LAWs, re-grounded for general
+research-synthesis prose in `references/synthesis-contract.md`.
+
+## Academic / sweller / cowan references
+
+Cognitive-load theory (Sweller 1988) and the four-item working-memory ceiling
+(Cowan 2001) are cited as scholarly sources, not licensed material.
