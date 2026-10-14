@@ -56,7 +56,7 @@ Thresholds per 100 words: new entities 1-3 healthy / 4-6 borderline / 7+ overloa
 numeric claims 1-3 / 4-5 / 6+; new jargon 0-1 / 2-3 / 4+; nested clauses per sentence
 <1.5 / 1.5-2.5 / >2.5. Two or more overloaded rows in one section = P1.
 
-Adapt `--jargon` mentally to the domain. For a political-economy piece the jargon set
+Adapt the jargon list mentally to the domain. For a political-economy piece the jargon set
 is terms like *marginal product*, *calculation problem*, *legitimacy*, *post-scarcity*.
 
 ### 3. Two-tier editorial pattern review
