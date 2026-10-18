@@ -85,6 +85,7 @@ environment variables from `render.yaml` manually.
 |---|---|
 | `GET /` | status JSON — safe to expose; contains no account detail |
 | `GET /check?token=…` | start a check now, returns `202` immediately |
+| `GET /test-email?token=…` | send a test email, to prove delivery from Render |
 
 ## What triggers an email
 

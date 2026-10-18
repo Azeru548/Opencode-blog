@@ -405,6 +405,18 @@ const server = createServer(async (req, res) => {
     return json(res, 202, { ok: true, started: true, note: 'check started; see the logs' });
   }
 
+  if (url.pathname === '/test-email') {
+    if (RUN_TOKEN && url.searchParams.get('token') !== RUN_TOKEN) return json(res, 403, { ok: false, error: 'bad token' });
+    try {
+      await sendMail('WURK watcher: test email',
+        '<div style="font:15px/1.55 -apple-system,Segoe UI,Roboto,sans-serif;color:#161B22;max-width:680px"><p><strong>Delivery through Sendliberty works.</strong></p><p>This message came from the watcher running on Render. You will get an email when a contest resolves, a payout lands, or a submission changes status.</p></div>',
+        'Sendliberty delivery works. This message came from the watcher running on Render.');
+      return json(res, 200, { ok: true, sent: true });
+    } catch (e) {
+      return json(res, 500, { ok: false, error: e.message });
+    }
+  }
+
   // Public status: deliberately no account detail, since anyone can reach this URL.
   return json(res, 200, {
     ok: true,
