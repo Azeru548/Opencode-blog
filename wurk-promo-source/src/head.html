@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WURK promo - Post it. Done.</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #1b1714; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  canvas { width: min(100vw, calc(100vh * 16 / 9)); height: auto; aspect-ratio: 16 / 9; display: block; cursor: pointer; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<script>
+"use strict";
+// =====================================================================
+//  WURK PROMO v4 (voiced) — 16:9, 36.25s @ 120 BPM, 24fps, crosshatch.
+//  F4 mission. The VOICE is the clock: every beat's wide shot cuts ~0.45s
+//  before its line speaks (shot establishes, then the line lands), and each
+//  build beat is a WIDE + a CLOSE insert — same artwork, tighter lens.
+//  Line times come straight from tools/voice.mjs (real takes, real lengths),
+//  so gaps in the script set the rhythm: the rush line holds 2.2s before
+//  "Post it. Done." — the deliberate silence the F4 payoff sits in.
+// =====================================================================
+const FPS = 24, W = 1920, H = 1080;
+const BPM = 120, BEAT = 60 / BPM, E8 = BEAT / 2, E16 = BEAT / 4;
+const DURATION = 36.25;
+const NFRAMES = Math.round(DURATION * FPS);
+const LOOP_T = NFRAMES / FPS;
+const SAFE = { top: 120, bottom: 140, left: 120, right: 120 };
+const HAND = '"Ink Free", "Segoe Print", "Bradley Hand", "Chalkboard SE", "Comic Sans MS", "Comic Neue", cursive';
+const CX = 960;
+
+// ---- the shot list: [key, t0, t1, title, draw]. One shot = one era = one hard cut.
+//      A build beat is a wide followed by a close insert (same drawing, tighter camera).
+const SHOT_LIST = [
+  ['open',          0.0,   2.0,  'flash-forward: real money',  () => sceneOpen('wide')],
+  ['open-close',    2.0,   4.25, 'the coin, up close',         () => sceneOpen('close')],
+  ['desk',          4.25,  6.25, 'too much work',              () => sceneDesk('wide')],
+  ['desk-close',    6.25,  7.5,  'the pile and the note',      () => sceneDesk('close')],
+  ['plan',          7.5,   9.75, 'the dashed plan',            () => scenePlan('wide')],
+  ['plan-close',    9.75,  11.5, 'the post',                   () => scenePlan('close')],
+  ['humans',        11.5,  13.0, 'humans review',              () => sceneHumans('wide')],
+  ['humans-close',  13.0,  14.5, 'PICKED',                     () => sceneHumans('close')],
+  ['agents',        14.5,  16.5, 'agents do the work',         () => sceneAgents('wide')],
+  ['agents-close',  16.5,  18.0, 'the terminal, typed',        () => sceneAgents('close')],
+  ['approve',       18.0,  20.75,'the winner',                 () => sceneApprove('wide')],
+  ['approve-close', 20.75, 23.25,'PAID',                       () => sceneApprove('close')],
+  ['rush',          23.25, 26.75,'jobs contests services USDC',() => sceneRush()],
+  ['silence',       26.75, 28.5, 'the dot waits',              () => sceneSilence()],
+  ['payoff',        28.5,  30.5, 'post it. done.',             () => scenePayoff()],
+  ['end-close',     30.5,  32.5, 'the mark',                   () => sceneEnd('close')],
+  ['end',           32.5,  36.25,'logo and wurk.fun',          () => sceneEnd('wide')],
+];
+const ERA_LIST = SHOT_LIST.map(([k, t0, t1, t, fn]) => [t0, t1, fn]);
+const SHOTS = SHOT_LIST.map(([k, t0, t1, t]) => [k, t0, t1, t]);
+const TIMELINE = {
+  width: W, height: H, fps: FPS, bpm: BPM, duration: DURATION, frames: NFRAMES, loop: LOOP_T, safe: SAFE,
+  format: 'F4',
+  shots: SHOTS.map(([key, t0, t1, title], i) => ({ id: i + 1, key, era: i, t0, t1, title })),
+  // every hard cut: the 15 insert boundaries + the 3 internal rush hits
+  cuts: [2.0, 4.25, 6.25, 7.5, 9.75, 11.5, 13.0, 14.5, 16.5, 18.0, 20.75, 23.25, 23.75, 24.25, 24.75, 26.75, 28.5, 30.5, 32.5],
+  morphs: [],
+  cues: { open: 1.2, desk: 4.6, pile: 4.6, plan: 7.7, post: 9.75, humans: 12.0, stamp: 13.0, agents: 14.9, type: 14.9, approve: 18.6, seal: 20.75, rush: [23.25, 23.75, 24.25, 24.75], hush: 26.75, payoff: 28.5, end: 30.6, url: 32.6 },
+  acts: [
+    { name: '1 Hook', role: 'hook', t0: 0.0, t1: 4.25 },
+    { name: '2 Problem', role: 'build', t0: 4.25, t1: 7.5 },
+    { name: '3 Plan', role: 'build', t0: 7.5, t1: 11.5 },
+    { name: '4 Humans', role: 'build', t0: 11.5, t1: 14.5 },
+    { name: '5 Agents', role: 'build', t0: 14.5, t1: 18.0 },
+    { name: '6 Approve', role: 'build', t0: 18.0, t1: 23.25 },
+    { name: '7 Rush', role: 'rush', t0: 23.25, t1: 26.75 },
+    { name: '8 Silence', role: 'wait', t0: 26.75, t1: 28.5 },
+    { name: '9 Payoff', role: 'gift', t0: 28.5, t1: 30.5 },
+    { name: '10 End', role: 'gift', t0: 30.5, t1: 36.25 },
+  ],
+  board: [
+    { t: 1.0,  title: 'the coin (wide)', sound: 'soft pad, line 1', next: 'punch in' },
+    { t: 3.1,  title: 'the coin (close)', sound: 'groove', next: 'the buried desk' },
+    { t: 5.25, title: 'too much work (wide)', sound: 'pluck, line 2', next: 'punch in' },
+    { t: 6.9,  title: 'the pile (close)', sound: 'drop ticks', next: 'the dashed plan' },
+    { t: 8.6,  title: 'the dashed plan (wide)', sound: 'pencil, line 3', next: 'punch in' },
+    { t: 10.6, title: 'the post (close)', sound: 'tick, POST', next: 'humans review' },
+    { t: 12.25,title: 'review (wide)', sound: 'groove, line 4', next: 'punch in' },
+    { t: 13.75,title: 'PICKED (close)', sound: 'stamp hit', next: 'inside: agents' },
+    { t: 15.5, title: 'agents (wide)', sound: 'low pad, line 5', next: 'punch in' },
+    { t: 17.25,title: 'the terminal (close)', sound: 'typing', next: 'the winner' },
+    { t: 19.4, title: 'the winner (wide)', sound: 'chant, line 6', next: 'punch in' },
+    { t: 22.0, title: 'PAID (close)', sound: 'seal hit', next: 'the rush' },
+    { t: 25.0, title: 'jobs contests services USDC', sound: 'four hits + line 7', next: 'silence' },
+    { t: 27.6, title: 'the dot waits', sound: 'silence (drop)', next: 'payoff hit' },
+    { t: 29.5, title: 'post it. done.', sound: 'LOUDEST: chord stab + line 8', next: 'the mark' },
+    { t: 31.5, title: 'the mark (close)', sound: 'flat chord', next: 'lockup' },
+    { t: 34.4, title: 'logo and wurk.fun', sound: 'line 9, tail', next: 'loops to coin' },
+  ],
+  narration: [],
+};
+window.TIMELINE = TIMELINE;

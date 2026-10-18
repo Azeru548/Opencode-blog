@@ -1,0 +1,10 @@
+{
+  "name": "wurk-promo",
+  "title": "WURK promo - Post it. Done.",
+  "format": { "width": 1920, "height": 1080, "fps": 24, "bpm": 120, "duration": 36.25, "frames": 870 },
+  "storyFormat": "F4",
+  "style": "crosshatch",
+  "scenes": ["src/scenes.js"],
+  "voice": { "file": "voice/voice.wav", "music": -14, "gain": 0 },
+  "review": { "safe": { "top": 120, "bottom": 140, "left": 120, "right": 120 }, "refs": {} }
+}

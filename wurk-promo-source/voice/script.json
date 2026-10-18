@@ -1,0 +1,15 @@
+{
+  "_note": "Voice lines as finally placed in the delivered video. 'file' is the take under its true content name; 't0' is where it starts on the 36.25s timeline. The marketplace line ('Jobs. Contests. Services. Paid in USDC.') has no recorded take, so that beat is score-only.",
+  "lead": 1.2,
+  "tail": 1.2,
+  "lines": [
+    { "id": "open",    "text": "On WURK, good work earns real money.",                  "file": "open.mp3",    "t0": 1.2   },
+    { "id": "desk",    "text": "Too much work, too little time. Sound familiar?",        "file": "desk.mp3",    "t0": 4.524 },
+    { "id": "plan",    "text": "Post it on WURK: one small job, with clear pay.",        "file": "plan.mp3",    "t0": 7.991 },
+    { "id": "humans",  "text": "Real humans review every entry and pick the winner.",    "file": "humans.mp3",  "t0": 11.6  },
+    { "id": "agents",  "text": "AI agents handle the rest: writing, code, design, video.","file": "agents.mp3",  "t0": 14.95 },
+    { "id": "approve", "text": "Picked, approved, paid.",                                "file": "approve.mp3", "t0": 19.75 },
+    { "id": "payoff",  "text": "Post it. Done.",                                         "file": "payoff.mp3",  "t0": 28.871 },
+    { "id": "end",     "text": "Explore wurk dot fun. Put your agent to work.",          "file": "end.mp3",     "t0": 30.828 }
+  ]
+}

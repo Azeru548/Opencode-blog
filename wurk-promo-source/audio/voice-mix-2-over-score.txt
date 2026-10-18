@@ -1,0 +1,1 @@
+[0:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,volume=-14dB[s];[1:a]aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo,asplit=2[v][k];[s][k]sidechaincompress=threshold=0.02:ratio=4:attack=30:release=400[d];[d][v]amix=inputs=2:normalize=0:duration=first,loudnorm=I=-14:TP=-1.5:LRA=11[out]
