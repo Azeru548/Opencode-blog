@@ -1,0 +1,15 @@
+{
+  "name": "wurk-watch",
+  "version": "1.0.0",
+  "private": true,
+  "description": "WURK account watcher — emails a digest whenever a contest resolves or a payout lands.",
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs",
+    "once": "node server.mjs --once"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,39 @@
+# Render blueprint for the WURK account watcher.
+#
+# Deploy: Render Dashboard -> New + -> Blueprint -> pick this repo/branch.
+# Render will prompt for the two secret values (they are never stored here).
+
+services:
+  - type: web
+    name: wurk-watch
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.mjs
+    healthCheckPath: /
+    autoDeploy: false
+    envVars:
+      - key: NODE_VERSION
+        value: 22.11.0
+
+      # --- secrets: Render prompts for these; they are not in the repo ---
+      - key: WURK_API_KEY
+        sync: false
+      - key: SENDLIBERTY_KEY
+        sync: false
+
+      # --- plain configuration ---
+      - key: MAIL_TO
+        value: pixelpro548@gmail.com
+      - key: MAIL_FROM
+        value: pixelpro548@gmail.com
+      - key: CHECK_INTERVAL_MINUTES
+        value: "120"
+      - key: KEEPALIVE_MINUTES
+        value: "10"
+      - key: BASELINE_LOOKBACK_HOURS
+        value: "24"
+
+      # Guards the manual /check endpoint.
+      - key: RUN_TOKEN
+        generateValue: true
